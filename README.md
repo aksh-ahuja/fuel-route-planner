@@ -7,7 +7,7 @@ Django API that takes a start and finish in the USA, returns the driving route, 
 
 [![Demo video](demo/thumbnail.jpg)](https://aksh-ahuja.github.io/fuel-route-planner/demo/demo.mp4)
 
-Click the image to watch the walkthrough (4:53): the API in Postman and a quick tour of the code.
+Click the image to watch the walkthrough (2:43, sped up 1.8x): the API in Postman and a quick tour of the code.
 
 ## Setup
 
