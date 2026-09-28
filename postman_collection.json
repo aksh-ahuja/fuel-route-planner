@@ -1,0 +1,1000 @@
+{
+  "info": {
+    "name": "Fuel Route Planner",
+    "description": "POST /api/route/plan/ returns the route, cheapest fuel stops (500 mi range, 10 mpg) and total fuel cost. GET /api/route/map/ draws the same plan on a map. start/finish accept \"City, ST\", \"lat,lng\" or a free text address.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Route planning",
+      "item": [
+        {
+          "name": "New York to Los Angeles (coast to coast)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "pm.test('has fuel plan', () => { pm.expect(data).to.have.property('total_fuel_cost'); });",
+                  "console.log(`${data.distance_miles} mi, ${data.fuel_stops.length} stops, $${data.total_fuel_cost}`);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"New York, NY\",\n  \"finish\": \"Los Angeles, CA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"New York, NY\",\n  \"finish\": \"Los Angeles, CA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": true,\n  \"message\": \"Route planned, happy driving!\",\n  \"data\": {\n    \"start\": {\n      \"query\": \"New York, NY\",\n      \"lat\": 40.662712,\n      \"lng\": -73.938677\n    },\n    \"finish\": {\n      \"query\": \"Los Angeles, CA\",\n      \"lat\": 34.019394,\n      \"lng\": -118.410825\n    },\n    \"distance_miles\": 2810.4,\n    \"duration_hours\": 50.3,\n    \"vehicle\": {\n      \"max_range_miles\": 500,\n      \"miles_per_gallon\": 10,\n      \"tank_gallons\": 50.0,\n      \"starts_with_full_tank\": true\n    },\n    \"fuel_stops\": [\n      {\n        \"name\": \"SHEETZ #639\",\n        \"address\": \"I-80 Exit 223\",\n        \"city\": \"Youngstown\",\n        \"state\": \"OH\",\n        \"lat\": 41.099095,\n        \"lng\": -80.645902,\n        \"price_per_gallon\": 3.059,\n        \"mile_marker\": 395.0,\n        \"off_route_miles\": 3.9,\n        \"gallons\": 35.51,\n        \"cost\": 108.62\n      },\n      {\n        \"name\": \"CASEYS #3686\",\n        \"address\": \"I-80 EXIT 81\",\n        \"city\": \"Utica\",\n        \"state\": \"IL\",\n        \"lat\": 41.345599,\n        \"lng\": -88.986337,\n        \"price_per_gallon\": 2.969,\n        \"mile_marker\": 855.1,\n        \"off_route_miles\": 1.6,\n        \"gallons\": 48.31,\n        \"cost\": 143.44\n      },\n      {\n        \"name\": \"AKAL TRAVEL CENTER\",\n        \"address\": \"I-80 EX 360\",\n        \"city\": \"Waco\",\n        \"state\": \"NE\",\n        \"lat\": 40.897,\n        \"lng\": -97.461747,\n        \"price_per_gallon\": 2.799,\n        \"mile_marker\": 1338.2,\n        \"off_route_miles\": 5.2,\n        \"gallons\": 40.68,\n        \"cost\": 113.87\n      },\n      {\n        \"name\": \"7-ELEVEN 42279\",\n        \"address\": \"I-76, Exit 39\",\n        \"city\": \"Keenesburg\",\n        \"state\": \"CO\",\n        \"lat\": 40.155173,\n        \"lng\": -104.56342,\n        \"price_per_gallon\": 3.149,\n        \"mile_marker\": 1745.0,\n        \"off_route_miles\": 3.1,\n        \"gallons\": 37.7,\n        \"cost\": 118.71\n      },\n      {\n        \"name\": \"MAVERIK COUNTRY STORE #693\",\n        \"address\": \"I-70, Exit 160 & hwy 191\",\n        \"city\": \"Green River\",\n        \"state\": \"UT\",\n        \"lat\": 38.99346,\n        \"lng\": -110.173424,\n        \"price_per_gallon\": 3.282,\n        \"mile_marker\": 2122.0,\n        \"off_route_miles\": 0.3,\n        \"gallons\": 39.52,\n        \"cost\": 129.7\n      },\n      {\n        \"name\": \"Maverik #674\",\n        \"address\": \"I-15, Exit 45\",\n        \"city\": \"North Las Vegas\",\n        \"state\": \"NV\",\n        \"lat\": 36.289865,\n        \"lng\": -115.089181,\n        \"price_per_gallon\": 3.282,\n        \"mile_marker\": 2517.2,\n        \"off_route_miles\": 2.0,\n        \"gallons\": 28.89,\n        \"cost\": 94.82\n      }\n    ],\n    \"total_gallons\": 230.61,\n    \"total_fuel_cost\": 709.16,\n    \"route\": {\n      \"type\": \"LineString\",\n      \"coordinates\": [\n        [\n          -73.93872,\n          40.6631\n        ],\n        [\n          -73.95658,\n          40.66356\n        ],\n        [\n          -73.96879,\n          40.67216\n        ],\n        [\n          -73.97748,\n          40.68406\n        ],\n        [\n          -73.98515,\n          40.69752\n        ],\n        [\n          \"...\",\n          \"2753 more points\"\n        ]\n      ]\n    },\n    \"map_url\": \"http://localhost:8000/api/route/map/?start=New+York%2C+NY&finish=Los+Angeles%2C+CA\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Miami to Boston",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "pm.test('has fuel plan', () => { pm.expect(data).to.have.property('total_fuel_cost'); });",
+                  "console.log(`${data.distance_miles} mi, ${data.fuel_stops.length} stops, $${data.total_fuel_cost}`);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Miami, FL\",\n  \"finish\": \"Boston, MA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Miami, FL\",\n  \"finish\": \"Boston, MA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": true,\n  \"message\": \"Route planned, happy driving!\",\n  \"data\": {\n    \"start\": {\n      \"query\": \"Miami, FL\",\n      \"lat\": 25.775163,\n      \"lng\": -80.208615\n    },\n    \"finish\": {\n      \"query\": \"Boston, MA\",\n      \"lat\": 42.338551,\n      \"lng\": -71.018253\n    },\n    \"distance_miles\": 1490.1,\n    \"duration_hours\": 28.5,\n    \"vehicle\": {\n      \"max_range_miles\": 500,\n      \"miles_per_gallon\": 10,\n      \"tank_gallons\": 50.0,\n      \"starts_with_full_tank\": true\n    },\n    \"fuel_stops\": [\n      {\n        \"name\": \"QUIKTRIP #7135\",\n        \"address\": \"US-17\",\n        \"city\": \"Hardeeville\",\n        \"state\": \"SC\",\n        \"lat\": 32.295308,\n        \"lng\": -81.040983,\n        \"price_per_gallon\": 2.999,\n        \"mile_marker\": 494.0,\n        \"off_route_miles\": 1.3,\n        \"gallons\": 22.61,\n        \"cost\": 67.82\n      },\n      {\n        \"name\": \"SHEETZ #804\",\n        \"address\": \"I-95, Exit 41\",\n        \"city\": \"Hope Mills\",\n        \"state\": \"NC\",\n        \"lat\": 34.96996,\n        \"lng\": -78.960602,\n        \"price_per_gallon\": 2.859,\n        \"mile_marker\": 726.1,\n        \"off_route_miles\": 3.0,\n        \"gallons\": 48.29,\n        \"cost\": 138.05\n      },\n      {\n        \"name\": \"FLORENCE VALERO\",\n        \"address\": \"US-130\",\n        \"city\": \"Burlington\",\n        \"state\": \"NJ\",\n        \"lat\": 40.078824,\n        \"lng\": -74.852483,\n        \"price_per_gallon\": 3.136,\n        \"mile_marker\": 1209.0,\n        \"off_route_miles\": 3.6,\n        \"gallons\": 28.24,\n        \"cost\": 88.55\n      }\n    ],\n    \"total_gallons\": 99.14,\n    \"total_fuel_cost\": 294.42,\n    \"route\": {\n      \"type\": \"LineString\",\n      \"coordinates\": [\n        [\n          -80.2086,\n          25.77469\n        ],\n        [\n          -80.19969,\n          25.7819\n        ],\n        [\n          -80.20535,\n          25.79551\n        ],\n        [\n          -80.2058,\n          25.80981\n        ],\n        [\n          -80.20633,\n          25.82433\n        ],\n        [\n          \"...\",\n          \"1427 more points\"\n        ]\n      ]\n    },\n    \"map_url\": \"http://localhost:8000/api/route/map/?start=Miami%2C+FL&finish=Boston%2C+MA\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Dallas to Denver",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "pm.test('has fuel plan', () => { pm.expect(data).to.have.property('total_fuel_cost'); });",
+                  "console.log(`${data.distance_miles} mi, ${data.fuel_stops.length} stops, $${data.total_fuel_cost}`);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Dallas, TX\",\n  \"finish\": \"Denver, CO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Dallas, TX\",\n  \"finish\": \"Denver, CO\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": true,\n  \"message\": \"Route planned, happy driving!\",\n  \"data\": {\n    \"start\": {\n      \"query\": \"Dallas, TX\",\n      \"lat\": 32.793333,\n      \"lng\": -96.766513\n    },\n    \"finish\": {\n      \"query\": \"Denver, CO\",\n      \"lat\": 39.76185,\n      \"lng\": -104.881105\n    },\n    \"distance_miles\": 779.4,\n    \"duration_hours\": 14.5,\n    \"vehicle\": {\n      \"max_range_miles\": 500,\n      \"miles_per_gallon\": 10,\n      \"tank_gallons\": 50.0,\n      \"starts_with_full_tank\": true\n    },\n    \"fuel_stops\": [\n      {\n        \"name\": \"QUIKTRIP #7914\",\n        \"address\": \"I-27 EXIT 117\",\n        \"city\": \"Amarillo\",\n        \"state\": \"TX\",\n        \"lat\": 35.198064,\n        \"lng\": -101.833107,\n        \"price_per_gallon\": 2.846,\n        \"mile_marker\": 368.0,\n        \"off_route_miles\": 4.7,\n        \"gallons\": 27.93,\n        \"cost\": 79.49\n      }\n    ],\n    \"total_gallons\": 27.93,\n    \"total_fuel_cost\": 79.49,\n    \"route\": {\n      \"type\": \"LineString\",\n      \"coordinates\": [\n        [\n          -96.76642,\n          32.79325\n        ],\n        [\n          -96.779,\n          32.7856\n        ],\n        [\n          -96.79582,\n          32.78215\n        ],\n        [\n          -96.81094,\n          32.7783\n        ],\n        [\n          -96.81408,\n          32.79281\n        ],\n        [\n          \"...\",\n          \"763 more points\"\n        ]\n      ]\n    },\n    \"map_url\": \"http://localhost:8000/api/route/map/?start=Dallas%2C+TX&finish=Denver%2C+CO\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "lat,lng input - Chicago to Dallas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "pm.test('has fuel plan', () => { pm.expect(data).to.have.property('total_fuel_cost'); });",
+                  "console.log(`${data.distance_miles} mi, ${data.fuel_stops.length} stops, $${data.total_fuel_cost}`);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"41.8781,-87.6298\",\n  \"finish\": \"Dallas, TX\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"41.8781,-87.6298\",\n  \"finish\": \"Dallas, TX\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": true,\n  \"message\": \"Route planned, happy driving!\",\n  \"data\": {\n    \"start\": {\n      \"query\": \"41.8781,-87.6298\",\n      \"lat\": 41.8781,\n      \"lng\": -87.6298\n    },\n    \"finish\": {\n      \"query\": \"Dallas, TX\",\n      \"lat\": 32.793333,\n      \"lng\": -96.766513\n    },\n    \"distance_miles\": 965.0,\n    \"duration_hours\": 17.1,\n    \"vehicle\": {\n      \"max_range_miles\": 500,\n      \"miles_per_gallon\": 10,\n      \"tank_gallons\": 50.0,\n      \"starts_with_full_tank\": true\n    },\n    \"fuel_stops\": [\n      {\n        \"name\": \"HUCKS FOOD & FUEL #379\",\n        \"address\": \"I-57, EXIT 53\",\n        \"city\": \"Marion\",\n        \"state\": \"IL\",\n        \"lat\": 37.734445,\n        \"lng\": -88.941164,\n        \"price_per_gallon\": 2.929,\n        \"mile_marker\": 316.0,\n        \"off_route_miles\": 1.1,\n        \"gallons\": 30.41,\n        \"cost\": 89.07\n      },\n      {\n        \"name\": \"EXTRA MILE TRUCK STOP\",\n        \"address\": \"I-30 EXIT 208\",\n        \"city\": \"Hooks\",\n        \"state\": \"TX\",\n        \"lat\": 33.470695,\n        \"lng\": -94.286542,\n        \"price_per_gallon\": 2.817,\n        \"mile_marker\": 804.1,\n        \"off_route_miles\": 0.3,\n        \"gallons\": 16.09,\n        \"cost\": 45.33\n      }\n    ],\n    \"total_gallons\": 46.5,\n    \"total_fuel_cost\": 134.4,\n    \"route\": {\n      \"type\": \"LineString\",\n      \"coordinates\": [\n        [\n          -87.62977,\n          41.8781\n        ],\n        [\n          -87.63032,\n          41.86402\n        ],\n        [\n          -87.63121,\n          41.85076\n        ],\n        [\n          -87.63098,\n          41.83622\n        ],\n        [\n          -87.63059,\n          41.82042\n        ],\n        [\n          \"...\",\n          \"932 more points\"\n        ]\n      ]\n    },\n    \"map_url\": \"http://localhost:8000/api/route/map/?start=41.8781%2C-87.6298&finish=Dallas%2C+TX\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Free text address - Empire State Building to Space Needle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "pm.test('has fuel plan', () => { pm.expect(data).to.have.property('total_fuel_cost'); });",
+                  "console.log(`${data.distance_miles} mi, ${data.fuel_stops.length} stops, $${data.total_fuel_cost}`);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Empire State Building, New York\",\n  \"finish\": \"Space Needle, Seattle\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Empire State Building, New York\",\n  \"finish\": \"Space Needle, Seattle\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": true,\n  \"message\": \"Route planned, happy driving!\",\n  \"data\": {\n    \"start\": {\n      \"query\": \"Empire State Building, New York\",\n      \"lat\": 40.7484421,\n      \"lng\": -73.9856589\n    },\n    \"finish\": {\n      \"query\": \"Space Needle, Seattle\",\n      \"lat\": 47.6205131,\n      \"lng\": -122.3493036\n    },\n    \"distance_miles\": 2863.4,\n    \"duration_hours\": 50.8,\n    \"vehicle\": {\n      \"max_range_miles\": 500,\n      \"miles_per_gallon\": 10,\n      \"tank_gallons\": 50.0,\n      \"starts_with_full_tank\": true\n    },\n    \"fuel_stops\": [\n      {\n        \"name\": \"SHEETZ #639\",\n        \"address\": \"I-80 Exit 223\",\n        \"city\": \"Youngstown\",\n        \"state\": \"OH\",\n        \"lat\": 41.099095,\n        \"lng\": -80.645902,\n        \"price_per_gallon\": 3.059,\n        \"mile_marker\": 392.0,\n        \"off_route_miles\": 3.8,\n        \"gallons\": 36.72,\n        \"cost\": 112.32\n      },\n      {\n        \"name\": \"KELLEYS MARKET\",\n        \"address\": \"I-90 Exit 15 & US-20 BUS\",\n        \"city\": \"Rockford\",\n        \"state\": \"IL\",\n        \"lat\": 42.258836,\n        \"lng\": -89.064553,\n        \"price_per_gallon\": 2.969,\n        \"mile_marker\": 867.2,\n        \"off_route_miles\": 5.1,\n        \"gallons\": 43.88,\n        \"cost\": 130.29\n      },\n      {\n        \"name\": \"Circle K #2746447\",\n        \"address\": \"I-94/US-52 EXIT 127 & US-71/SR-28\",\n        \"city\": \"Sauk Centre\",\n        \"state\": \"MN\",\n        \"lat\": 45.736472,\n        \"lng\": -94.952729,\n        \"price_per_gallon\": 3.189,\n        \"mile_marker\": 1306.0,\n        \"off_route_miles\": 1.0,\n        \"gallons\": 13.3,\n        \"cost\": 42.43\n      },\n      {\n        \"name\": \"PETRO SERVE USA\",\n        \"address\": \"US-10\",\n        \"city\": \"West Fargo\",\n        \"state\": \"ND\",\n        \"lat\": 46.85638,\n        \"lng\": -96.904809,\n        \"price_per_gallon\": 3.029,\n        \"mile_marker\": 1439.1,\n        \"off_route_miles\": 0.6,\n        \"gallons\": 45.6,\n        \"cost\": 138.12\n      },\n      {\n        \"name\": \"CENEX ZIP TRIP #75\",\n        \"address\": \"I-94/US-12, EXIT 138 & US-59\",\n        \"city\": \"Miles City\",\n        \"state\": \"MT\",\n        \"lat\": 46.405823,\n        \"lng\": -105.838944,\n        \"price_per_gallon\": 3.497,\n        \"mile_marker\": 1895.1,\n        \"off_route_miles\": 1.1,\n        \"gallons\": 22.54,\n        \"cost\": 78.83\n      },\n      {\n        \"name\": \"TOWN PUMP FOOD STORE #922\",\n        \"address\": \"I-90, EXIT 370 &SR-10\",\n        \"city\": \"Big Timber\",\n        \"state\": \"MT\",\n        \"lat\": 45.834782,\n        \"lng\": -109.948266,\n        \"price_per_gallon\": 3.479,\n        \"mile_marker\": 2120.5,\n        \"off_route_miles\": 0.9,\n        \"gallons\": 43.36,\n        \"cost\": 150.85\n      },\n      {\n        \"name\": \"MAVERIK COUNTRY STORE #607\",\n        \"address\": \"I-90, EXIT 1\",\n        \"city\": \"Post Falls\",\n        \"state\": \"ID\",\n        \"lat\": 47.725559,\n        \"lng\": -116.944167,\n        \"price_per_gallon\": 3.376,\n        \"mile_marker\": 2554.1,\n        \"off_route_miles\": 1.0,\n        \"gallons\": 30.38,\n        \"cost\": 102.56\n      }\n    ],\n    \"total_gallons\": 235.78,\n    \"total_fuel_cost\": 755.4,\n    \"route\": {\n      \"type\": \"LineString\",\n      \"coordinates\": [\n        [\n          -73.98589,\n          40.74813\n        ],\n        [\n          -73.99818,\n          40.75415\n        ],\n        [\n          -74.00955,\n          40.76311\n        ],\n        [\n          -74.02346,\n          40.76589\n        ],\n        [\n          -74.02726,\n          40.77037\n        ],\n        [\n          \"...\",\n          \"2834 more points\"\n        ]\n      ]\n    },\n    \"map_url\": \"http://localhost:8000/api/route/map/?start=Empire+State+Building%2C+New+York&finish=Space+Needle%2C+Seattle\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Short trip, no fuel stop needed - Chicago to Detroit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));",
+                  "const data = pm.response.json().data;",
+                  "pm.test('has fuel plan', () => { pm.expect(data).to.have.property('total_fuel_cost'); });",
+                  "console.log(`${data.distance_miles} mi, ${data.fuel_stops.length} stops, $${data.total_fuel_cost}`);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Detroit, MI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Detroit, MI\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": true,\n  \"message\": \"A full tank gets you there, no fuel stop needed!\",\n  \"data\": {\n    \"start\": {\n      \"query\": \"Chicago, IL\",\n      \"lat\": 41.837045,\n      \"lng\": -87.684939\n    },\n    \"finish\": {\n      \"query\": \"Detroit, MI\",\n      \"lat\": 42.383037,\n      \"lng\": -83.102237\n    },\n    \"distance_miles\": 277.3,\n    \"duration_hours\": 5.3,\n    \"vehicle\": {\n      \"max_range_miles\": 500,\n      \"miles_per_gallon\": 10,\n      \"tank_gallons\": 50.0,\n      \"starts_with_full_tank\": true\n    },\n    \"fuel_stops\": [],\n    \"total_gallons\": 0,\n    \"total_fuel_cost\": 0,\n    \"route\": {\n      \"type\": \"LineString\",\n      \"coordinates\": [\n        [\n          -87.68488,\n          41.83705\n        ],\n        [\n          -87.67477,\n          41.83039\n        ],\n        [\n          -87.65445,\n          41.83064\n        ],\n        [\n          -87.63555,\n          41.83088\n        ],\n        [\n          -87.63079,\n          41.81912\n        ],\n        [\n          \"...\",\n          \"271 more points\"\n        ]\n      ]\n    },\n    \"map_url\": \"http://localhost:8000/api/route/map/?start=Chicago%2C+IL&finish=Detroit%2C+MI\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Errors",
+      "item": [
+        {
+          "name": "Outside USA - Toronto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                  "pm.test('status flag is false', () => pm.expect(pm.response.json().status).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Toronto, ON\",\n  \"finish\": \"Boston, MA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Toronto, ON\",\n  \"finish\": \"Boston, MA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": false,\n  \"message\": \"'Toronto, ON' is outside the USA, we only plan trips within the USA\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Unknown location",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                  "pm.test('status flag is false', () => pm.expect(pm.response.json().status).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"asdfgh\",\n  \"finish\": \"Boston, MA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"asdfgh\",\n  \"finish\": \"Boston, MA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": false,\n  \"message\": \"We couldn't find 'asdfgh' in the USA, try 'City, ST' or 'lat,lng'\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Missing finish field",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                  "pm.test('status flag is false', () => pm.expect(pm.response.json().status).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Boston, MA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Boston, MA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": false,\n  \"message\": \"finish: This field is required.\",\n  \"errors\": {\n    \"finish\": [\n      \"This field is required.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "No drivable route - Honolulu",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));",
+                  "pm.test('status flag is false', () => pm.expect(pm.response.json().status).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/route/plan/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "plan",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"Honolulu, HI\",\n  \"finish\": \"Boston, MA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/route/plan/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "route",
+                    "plan",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start\": \"Honolulu, HI\",\n  \"finish\": \"Boston, MA\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": false,\n  \"message\": \"No drivable route found between these two places\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Map",
+      "item": [
+        {
+          "name": "Map - New York to Los Angeles",
+          "request": {
+            "method": "GET",
+            "description": "Renders the route and fuel stops on a Leaflet map. Open the URL in a browser, or use the Preview tab in Postman.",
+            "url": {
+              "raw": "{{base_url}}/api/route/map/?start=New%20York%2C%20NY&finish=Los%20Angeles%2C%20CA",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "map",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "New York, NY"
+                },
+                {
+                  "key": "finish",
+                  "value": "Los Angeles, CA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Map - Miami to Boston",
+          "request": {
+            "method": "GET",
+            "description": "Renders the route and fuel stops on a Leaflet map. Open the URL in a browser, or use the Preview tab in Postman.",
+            "url": {
+              "raw": "{{base_url}}/api/route/map/?start=Miami%2C%20FL&finish=Boston%2C%20MA",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "route",
+                "map",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "Miami, FL"
+                },
+                {
+                  "key": "finish",
+                  "value": "Boston, MA"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

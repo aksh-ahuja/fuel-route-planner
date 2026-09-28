@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Fuel Route</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, Helvetica, Arial, sans-serif; }
+    #map { height: 100vh; }
+    .summary { position: absolute; top: 12px; right: 12px; z-index: 1000; background: #fff; padding: 12px 16px;
+               border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.2); font-size: 14px; line-height: 1.6; }
+    .error { padding: 24px; color: #b00020; }
+  </style>
+</head>
+<body>
+{% if error %}
+  <div class="error">{{ error }}</div>
+{% else %}
+  <div class="summary">
+    <b>{{ plan.start.query }} &rarr; {{ plan.finish.query }}</b><br>
+    {{ plan.distance_miles }} miles &middot; {{ plan.duration_hours }} hrs<br>
+    {{ plan.fuel_stops|length }} fuel stops &middot; {{ plan.total_gallons }} gal<br>
+    Total fuel cost: <b>${{ plan.total_fuel_cost }}</b>
+  </div>
+  <div id="map"></div>
+  {{ plan|json_script:"plan-data" }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    const plan = JSON.parse(document.getElementById("plan-data").textContent);
+    const map = L.map("map");
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    const line = L.polyline(plan.route.coordinates.map(([lng, lat]) => [lat, lng]), {color: "#2563eb", weight: 5}).addTo(map);
+    map.fitBounds(line.getBounds(), {padding: [30, 30]});
+
+    L.marker([plan.start.lat, plan.start.lng]).addTo(map).bindPopup("<b>Start</b><br>" + plan.start.query);
+    L.marker([plan.finish.lat, plan.finish.lng]).addTo(map).bindPopup("<b>Finish</b><br>" + plan.finish.query);
+
+    plan.fuel_stops.forEach((stop, i) => {
+      L.circleMarker([stop.lat, stop.lng], {radius: 9, color: "#fff", weight: 2, fillColor: "#16a34a", fillOpacity: 1})
+        .addTo(map)
+        .bindPopup(`<b>Stop ${i + 1}: ${stop.name}</b><br>${stop.address}, ${stop.city}, ${stop.state}<br>
+                    $${stop.price_per_gallon}/gal &middot; ${stop.gallons} gal &middot; <b>$${stop.cost}</b><br>
+                    Mile ${stop.mile_marker}`);
+    });
+  </script>
+{% endif %}
+</body>
+</html>
