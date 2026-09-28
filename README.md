@@ -3,6 +3,12 @@
 Django API that takes a start and finish in the USA, returns the driving route, where to fuel up (cheapest plan for a
 500 mile range truck doing 10 mpg) and the total fuel cost.
 
+## Demo
+
+[![Demo video](demo/thumbnail.jpg)](demo/demo.mp4)
+
+Click the image to watch the walkthrough (4:53): the API in Postman and a quick tour of the code.
+
 ## Setup
 
 ```bash
